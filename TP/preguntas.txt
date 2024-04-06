@@ -1,0 +1,170 @@
+1. Enumerar los tipos de datos basicos en C.
+Escriba una definicion de una variablde de cada tipo. Por ej. : int a;
+
+Enteros:
+
+*int
+*short
+
+Decimales
+*float
+*double
+
+Caracteres
+*char
+
+2. Explique qué significa la palabra word cuando el contexto es la 
+   Arquitectura de una Computadora.
+
+   Se refiere a la unidad basica de datos que la computadora manejar puede procesar o operar 
+   EN x86 el word es de 64 bits
+
+3. ¿Cuántos bits puede almacenar una variable declarada como int en C? 
+   (ej. int var;)
+   Suponga 3 computadoras de arquitecturas diferentes: arquitecturas de 8bits, 
+   32bits y 64bits?
+
+   Arquitecturas de 8 bits:
+   el minimo en C es de 16 bits
+
+4. 
+
+   - %d o %i: Especifican un entero con signo.
+   - %c     : Un caracter.
+5.
+rango de char -128, 127
+rango de unsigned char: 0 a 255
+
+6.
+i = 01100001
+j = 01001101
+k = 01001101
+
+7. Cuáles de entre estas declaraciones contienen errores?
+
+    integer a;    //bien
+    short i,j,k;  //bien
+    long float (h);  //mal
+    double long d3;  //bien
+    unsigned float n;   //mal, no es valido para float
+    char 2j;   //mal, empieza con numero
+    int MY; //bien
+    float ancho, alto, long;  // mal, long es reservado
+    bool i; //mal, no existe
+
+8. Averigüe los tamaños de todos los tipos básicos en su sistema aplicando 
+    el operador sizeof().
+   int: 4 bytes.
+   char: 1 byte.
+   float: 4 bytes.
+   double 8 bytes.
+   short: 2 bytes.
+   long 8 bytes.
+
+9. Prepare un programa con una variable de tipo char y otra de tipo unsigned 
+    char. Inicialice ambas variables con los valores máximos de cada tipo, 
+    para comprobar el resultado de incrementarlas en una unidad. 
+    Imprima los valores de cada variable antes y después del incremento.
+
+con los valores de un tipo char -128   -  127 y en unsigned  char de pasa de 255 a 0
+
+10. 
+
+10.a ¿Qué hace falta corregir para que la variable r contenga la división 
+    exacta de a y b?
+
+    int a, b;
+    float r;
+    a = 5;
+    b = 2;
+    r = a / b;	
+
+    *al ser a y b numeros enteros la division dara como resultado un numero entero, entonces 
+    para tener la division exacta debemos castear la division a float
+
+ 10.b ¿Qué resultado puede esperarse del siguiente fragmento de código?
+
+    int a, b, c, d;
+    a = 1;
+    b = 2;
+    c = a / b;
+    d = a / c;
+
+    division de enteros, entonces redondea para abajo entonces c=a/b es 0.5 que redondea hacia
+    abajo entonces dara c=0 y luego d=a/c donde c=0 dara un error de division.
+
+ 10.c ¿Cuál es el resultado del siguiente fragmento de código? Anticipe su 
+    respuesta en base a lo dicho en esta unidad y luego confírmela mediante 
+    un programa.
+
+         printf("%d\n", 20/3);//6
+    printf("%f\n", 20/3);//06.000000
+    printf("%f\n", 20/3.);//06.666667
+    printf("%d\n", 10%3);//1
+    printf("%d\n", 3.1416);// 3 o tambien si saco el signo y exponente 
+    printf("%f\n", (double)20/3);// 6.666667 porque si bien son 8 bytes de double luego usa %f de float
+    printf("%f\n", (int)3.1416);//03.000000
+    printf("%d\n", (int)3.14 //  
+11.
+hecho
+12.
+12. Descargue el código ahorcado.c propuesto por la cátedra.
+    12.a Investigar cuál es la función que cumplen las siguientes lineas de código:
+        #include <stdio.h>
+        #include <stdlib.h>
+        //para incluir las librerías estándar de entrada/salida y de funciones estándar de C.
+        system ("/bin/stty raw");
+        /*
+        Esta línea de código invoca el comando del sistema /bin/stty raw, que 
+        configura el modo de entrada del terminal en "raw". En el modo raw, el terminal
+         envía cada tecla presionada al programa de manera inmediata, sin esperar por la 
+         tecla Enter. Esto es útil para juegos o aplicaciones interactivas que requieren 
+         capturar las pulsaciones de teclas inmediatamente.
+        */
+        system ("/bin/stty sane erase ^H");
+        /*
+        Esta línea de código invoca el comando del sistema /bin/stty sane erase ^H,
+        que restaura la configuración normal del terminal después de que el programa 
+        ha terminado. El ^H representa la tecla retroceso (Backspace), que se usa para 
+        borrar caracteres en la línea de entrada
+        */
+
+    12.b Complete el código ahorcado.c usando printf() y getchar(), para desarrollar el juego del ahorcado.
+    
+
+    #include <stdio.h>
+#include <stdlib.h>
+#include <string.h> // Incluir la librería string.h para usar strlen
+
+int main() {
+    int c, i;
+    char palabraSecreta[] = "ejemplo";
+    char palabra[] = "_______";
+    int tamanio = strlen(palabraSecreta);
+
+    /* Decirle al sistema que el modo input es RAW */
+    system("/bin/stty raw");
+
+    while (1) {
+        printf("\r                                                                 ");
+        printf("\rIngrese una letra (0 para salir): ");
+        c = getchar();
+        printf("\");
+
+        if (c == '0') {
+            break;
+        } else {
+            for (i = 0; i < tamanio; i++) {
+                if (palabra[i] == '_' && palabraSecreta[i] == c) {
+                    palabra[i] = c;
+                }
+            }
+            printf("%s\n", palabra); 
+        }
+    }
+
+    /* Restaurar la configuración normal del terminal */
+    system("/bin/stty sane erase ^H");
+
+    return 0;
+}
