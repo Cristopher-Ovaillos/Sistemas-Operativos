@@ -87,3 +87,4 @@ extern void  mi_programa(void);
 extern void  mi_programa(int *pidA,int *pidB);
 extern void  ejercicio6(void);
 extern void  ejercicio7(void);
+extern void  ahorcadoUnix(void);
