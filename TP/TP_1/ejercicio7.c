@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
-#include <sys/wait.h>
+#include <signal.h>
 
 
 int esPrimo(int numero)
@@ -45,22 +44,21 @@ int encontrarPrimos(int inicio, int fin) {
 return 0;
 }
 
-int main() {
+void main(void) {
     int pid = fork();  // Crear un proceso hijo
 
     if (pid == 0) {  // Proceso hijo
-        printf("Proceso hijo iniciado.\n");
-        encontrarPrimos(1000, 5000);
-        printf("Proceso hijo finalizado > fin\n");
-        exit(0);  
+    encontrarPrimos(1000, 5000);
+     exit(0);
+          
     } else  {  // Proceso padre
-        printf("Proceso padre iniciado.\n");
+        //printf(" Proceso padre iniciado.\n");
         
         encontrarPrimos(0, 1000);
-        printf("Proceso padre finalizado\n");
+        //printf(" Proceso padre finalizado\n");
         kill(pid,SIGKILL);
-        printf("ELimino el hijo.\n");
+        printf(" ELimino el hijo.\n");
     } 
+
     
-    return 0;
 }
