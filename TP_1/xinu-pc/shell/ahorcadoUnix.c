@@ -49,4 +49,5 @@ void ahorcadoUnix(void)
 
     control(CONSOLE, TC_MODEC, 0, 0);
     // system ("/bin/stty sane erase ^H");
+    printf("");
 }

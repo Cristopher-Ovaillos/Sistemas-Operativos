@@ -14,6 +14,8 @@ int esPrimo(int numero)
     }
     else
     {
+ //el numero de divisores que puede tener un numero es el resultado de la raiz cuadrada del numero
+ 
         while (salirBucle && (i * i) <= numero)
         {
             if ((numero % i) == 0)
@@ -45,11 +47,12 @@ void procesoHijo() {
 
 void procesoPadre() {
     printf("Proceso padre iniciado.\n");
-    obtenerPrimos(0,1000);
+    
 
     // Creo el proceso hijo con lo que tiene que hacer
     int pid = create(procesoHijo, 4096, 20, "Hijo", 0);
     resume(pid);
+    obtenerPrimos(0,1000);
     // Finalizo el proceso hijo
     kill(pid);
     printf("Proceso hijo finalizado por el padre.\n");
