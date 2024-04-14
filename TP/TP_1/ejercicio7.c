@@ -34,30 +34,42 @@ int esPrimo(int numero)
 }
 
 
-int encontrarPrimos(int inicio, int fin) {
+int encontrarPrimosPadre() {
     
-    for (int i = inicio; i <= fin; i++) {
+    for (int i = 0; i <=1000; i++) {
         if (esPrimo(i)) {
-            printf("%d ", i);  
+            printf("%d\n", i);  
+        }
+    }
+return 0;
+}
+int encontrarPrimosHijo() {
+    
+    for (int i = 1000; i <= 5000; i++) {
+        if (esPrimo(i)) {
+            printf("%d\n", i);  
         }
     }
 return 0;
 }
 
+
 void main(void) {
     int pid = fork();  // Crear un proceso hijo
 
     if (pid == 0) {  // Proceso hijo
-    encontrarPrimos(1000, 5000);
+    printf(" Empezo  el hijo.\n");
+    encontrarPrimosHijo();
+    printf(" ELimino el hijo.\n");
      exit(0);
           
     } else  {  // Proceso padre
-        //printf(" Proceso padre iniciado.\n");
-        
-        encontrarPrimos(0, 1000);
-        //printf(" Proceso padre finalizado\n");
+        printf(" Proceso padre iniciado.\n");
+        encontrarPrimosPadre();
+        printf(" Proceso padre finalizado\n");
         kill(pid,SIGKILL);
         printf(" ELimino el hijo.\n");
+         exit(0);
     } 
 
     

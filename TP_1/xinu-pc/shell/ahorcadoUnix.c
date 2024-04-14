@@ -3,8 +3,7 @@
 
 void ahorcadoUnix(void)
 {
-    // system ("/bin/stty raw");
-    control(CONSOLE, TC_MODER, 0, 0);
+  
     char palabraSecreta[] = "ejemplo";
     int tamanio = 0, intentos = 6, x = 0, i = 0;
     ;
@@ -19,6 +18,10 @@ void ahorcadoUnix(void)
     }
     palabra[tamanio] = '\0'; // se agrega el caracter nulo
     int c;
+    int total;
+    total=0;
+      // system ("/bin/stty raw");
+    control(CONSOLE, TC_MODER, 0, 0);
     while (1)
     {
         printf("\r                                                          ");
@@ -37,17 +40,32 @@ void ahorcadoUnix(void)
                 if (palabra[i] == '_' && palabraSecreta[i] == c)
                 {
                     palabra[i] = c;
-                    acierto = 1; // Indica que se ha acertado una letra, el cero aca representa el falso y cualquier otro num el true
+                    acierto = acierto + 1; // Indica que se ha acertado una letra, el cero aca representa el falso y cualquier otro num el true
                 }
             }
             if (!acierto)
             { // Si no se ha acertado ninguna letra, incrementofallos
                 x++;
             }
+            total=acierto+total;
+        
         }
+        
+        if (total == tamanio)
+		{
+			printf("\n Ganaste era : %s\n ",palabraSecreta);
+			break;
+		}
+		if (x == intentos)
+		{
+			printf("\n Perdiste\n");
+			break;
+		}
+
+        
     }
 
     control(CONSOLE, TC_MODEC, 0, 0);
     // system ("/bin/stty sane erase ^H");
-    printf("");
+   
 }

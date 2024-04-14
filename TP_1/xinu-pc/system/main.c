@@ -13,13 +13,13 @@ process	main(void)
     print_text_on_vga(10, 220, "Sistemas Operativos I");
     print_text_on_vga(10, 240, "Cristopher Ovaillos");
 
-    mi_programa(&pidA, &pidB);
+    //mi_programa(&pidA, &pidB);
 
-    sleepms(10000);
+    //sleepms(10000);
 
-    kill(pidA);
-    kill(pidB);
-    sleepms(2000);
+    //kill(pidA);
+    //kill(pidB);
+    //sleepms(2000);
     recvclr();
     resume(create(shell, 8192, 50, "shell", 1, CONSOLE));
 
