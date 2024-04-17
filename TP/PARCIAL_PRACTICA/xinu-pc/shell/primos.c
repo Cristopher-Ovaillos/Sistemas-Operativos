@@ -40,7 +40,7 @@ números buscar primos).
 
 
 */
-void control() {
+void control_p() {
     int pidA,pidB;
 
     pidA=create(encontrar_primos, 1024, 20, "Proceso A", 2, 0, 5000);
