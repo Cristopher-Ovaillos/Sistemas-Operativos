@@ -32,8 +32,9 @@ const	struct	cmdent	cmdtab[] = {
 		{"Ejercicio2",		FALSE,	Ejercicio2},
 		{"ejerc2mod",		FALSE,	ejerc2mod},
 {"ejercicio3",		FALSE,	ejercicio3},
-{"ejemploStruc",		FALSE,	ejemploStruc}
-,{"ejemplo",		FALSE,	ejemplo}
+{"ejemploStruc",		FALSE,	ejemploStruc},
+{"ejemplo",		FALSE,	ejemplo},
+{"primos",		FALSE,	primos}
 };
 
 uint32  ncmd = sizeof(cmdtab) / sizeof(struct cmdent);
