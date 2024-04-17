@@ -11,13 +11,12 @@ corredor_a()
 {
     while (1)
     {
-         wait(semC);
+        wait(semA);
+        wait(semC);
         distancia++;
         signal(semC);
-        wait(semA);
         vel_a++;
         signal(semA);
-       
     }
 }
 
@@ -26,13 +25,12 @@ corredor_b()
 
     while (1)
     {
-         wait(semC);
+        wait(semB);
+        wait(semC);
         distancia++;
         signal(semC);
-        wait(semB);
         vel_b++;
         signal(semB);
-       
     }
 }
 
@@ -62,17 +60,16 @@ muestra_carrera()
         /* Nos posicionamos en la fila 6 columna 10 */
         printf("%c[6;10f", ASCII_ESC);
         printf("Velocidad corredor B: %d \n", vel_b);
-/*
-printf("%c[7;10f", ASCII_ESC);
-        printf("1: el proceso corredor_a se suspende/reanuda. ");
-        printf("%c[8;10f", ASCII_ESC);
-        printf("5: el proceso corredor_a muere.  \n");
-        printf("%c[9;10f", ASCII_ESC);
-        printf("2: el proceso corredor_b se suspende/reanuda. \n");
-        printf("%c[10;10f", ASCII_ESC);
-        printf("6: el proceso corredor_b muere. \n");
-*/
-        
+        /*
+        printf("%c[7;10f", ASCII_ESC);
+                printf("1: el proceso corredor_a se suspende/reanuda. ");
+                printf("%c[8;10f", ASCII_ESC);
+                printf("5: el proceso corredor_a muere.  \n");
+                printf("%c[9;10f", ASCII_ESC);
+                printf("2: el proceso corredor_b se suspende/reanuda. \n");
+                printf("%c[10;10f", ASCII_ESC);
+                printf("6: el proceso corredor_b muere. \n");
+        */
 
         sleepms(50);
     }
@@ -105,22 +102,22 @@ control_race()
             {
                 // veradero entonces esta en listo
                 suspend(pidA);
+                signal(semC);
                 estadoA = 0;
-                
             }
             else
             {
                 resume(pidA);
                 estadoA = 1;
             }
-             signal(semA);
-           
+            signal(semA);
 
             break;
         case '5':
-         wait(semA);
+            wait(semA);
             kill(pidA);
-             signal(semA);
+             signal(semC);
+            signal(semA);
             break;
         case '2':
             wait(semB);
@@ -128,6 +125,7 @@ control_race()
             {
                 // veradero entonces esta en listo
                 suspend(pidB);
+                 signal(semC);
                 estadoB = 0;
             }
             else
@@ -135,13 +133,13 @@ control_race()
                 resume(pidB);
                 estadoB = 1;
             }
-
             signal(semB);
             break;
         case '6':
             wait(semB);
             kill(pidB);
-             signal(semB);
+             signal(semC);
+            signal(semB);
             break;
         case 'p':
             wait(semC);
