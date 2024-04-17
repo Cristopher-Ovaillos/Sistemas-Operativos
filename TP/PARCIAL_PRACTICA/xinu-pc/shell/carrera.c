@@ -3,7 +3,7 @@
 
 int vel_a = 0;
 int vel_b = 0;
-int distancia = 0;
+int distancia = -1;
 int valorMostrar = 0;
 int c;
 sid32 semA, semB, semC;
@@ -11,12 +11,13 @@ corredor_a()
 {
     while (1)
     {
+         wait(semC);
+        distancia++;
+        signal(semC);
         wait(semA);
         vel_a++;
         signal(semA);
-        wait(semC);
-        distancia++;
-        signal(semC);
+       
     }
 }
 
@@ -25,12 +26,13 @@ corredor_b()
 
     while (1)
     {
+         wait(semC);
+        distancia++;
+        signal(semC);
         wait(semB);
         vel_b++;
         signal(semB);
-        wait(semC);
-        distancia++;
-        signal(semC);
+       
     }
 }
 
@@ -104,18 +106,21 @@ control_race()
                 // veradero entonces esta en listo
                 suspend(pidA);
                 estadoA = 0;
+                
             }
             else
             {
                 resume(pidA);
                 estadoA = 1;
             }
-
-            signal(semA);
+             signal(semA);
+           
 
             break;
         case '5':
+         wait(semA);
             kill(pidA);
+             signal(semA);
             break;
         case '2':
             wait(semB);
@@ -134,7 +139,9 @@ control_race()
             signal(semB);
             break;
         case '6':
+            wait(semB);
             kill(pidB);
+             signal(semB);
             break;
         case 'p':
             wait(semC);
