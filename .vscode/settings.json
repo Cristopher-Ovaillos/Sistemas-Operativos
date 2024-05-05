@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "xinu.h": "c"
+        "xinu.h": "c",
+        "mman.h": "c"
     }
 }

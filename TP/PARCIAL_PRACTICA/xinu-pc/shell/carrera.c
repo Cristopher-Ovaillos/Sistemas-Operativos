@@ -6,17 +6,16 @@ int vel_b = 0;
 int distancia = -1;
 int valorMostrar = 0;
 int c;
-sid32 semA, semB, semC;
+sid32  semC;
 corredor_a()
 {
     while (1)
     {
-        wait(semA);
         wait(semC);
         distancia++;
         signal(semC);
         vel_a++;
-        signal(semA);
+        
     }
 }
 
@@ -25,12 +24,12 @@ corredor_b()
 
     while (1)
     {
-        wait(semB);
+    
         wait(semC);
         distancia++;
         signal(semC);
         vel_b++;
-        signal(semB);
+       
     }
 }
 
@@ -77,8 +76,7 @@ muestra_carrera()
 
 control_race()
 {
-    semA = semcreate(1);
-    semB = semcreate(1);
+   
     semC = semcreate(1);
     uint32 estadoA = 1; // esta verdadero
     uint32 estadoB = 1;
@@ -97,11 +95,13 @@ control_race()
         switch (c)
         {
         case '1':
-            wait(semA);
+            //verficar que cuando muere nunca ande esto
             if (estadoA)
             {
                 // veradero entonces esta en listo
+				wait(semC);
                 suspend(pidA);
+
                 signal(semC);
                 estadoA = 0;
             }
@@ -110,20 +110,22 @@ control_race()
                 resume(pidA);
                 estadoA = 1;
             }
-            signal(semA);
+           
 
             break;
         case '5':
-            wait(semA);
+       
+            wait(semC);
             kill(pidA);
              signal(semC);
-            signal(semA);
+            
             break;
         case '2':
-            wait(semB);
+            
             if (estadoB)
             {
                 // veradero entonces esta en listo
+				wait(semC);
                 suspend(pidB);
                  signal(semC);
                 estadoB = 0;
@@ -133,13 +135,13 @@ control_race()
                 resume(pidB);
                 estadoB = 1;
             }
-            signal(semB);
+            
             break;
         case '6':
-            wait(semB);
+            wait(semC);
             kill(pidB);
              signal(semC);
-            signal(semB);
+          
             break;
         case 'p':
             wait(semC);
