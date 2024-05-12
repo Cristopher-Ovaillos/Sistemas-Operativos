@@ -259,7 +259,8 @@ int galaga(void)
 
 		// draw hard enemies
 
-// Detección de colisiones y movimiento para hardEnemies
+// Deteccion de colisiones y movimiento para hardEnemies
+//arreglar
 for (int a = 0; a < 9; a++)
 {
     hardEnemies[a].enemyY += enemyspeed;
@@ -276,9 +277,6 @@ for (int a = 0; a < 9; a++)
         hardEnemies[a].enemyY = 0;
         hardEnemies[a].collisionFlag = 0; // Reiniciar bandera de colisión al reiniciar la posición
     }
-
-    // Resto de la lógica de movimiento y ajuste de posiciones
-    // ...
 
     if (hardEnemies[a].collisionFlag)
     {
