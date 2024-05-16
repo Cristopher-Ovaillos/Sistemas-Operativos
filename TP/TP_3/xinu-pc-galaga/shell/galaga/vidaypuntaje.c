@@ -10,7 +10,7 @@ int32 vidaypuntaje(void)
     while (1)
     {
         sprintf(cadena, "Vidas : %d Puntaje : %d", vidas, puntaje);
-        print_text_on_vga(300, 40, cadena);
+        print_text_on_vga(40, 170, cadena);
         msg = receive();
         switch (msg)
         {
