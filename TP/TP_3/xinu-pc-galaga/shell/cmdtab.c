@@ -27,7 +27,7 @@ const	struct	cmdent	cmdtab[] = {
 	{"udpecho",	FALSE,	xsh_udpecho},
 	{"udpeserver",	FALSE,	xsh_udpeserver},
 	{"uptime",	FALSE,	xsh_uptime},
-	{"galaga",	FALSE,	procesoA},
+	{"galaga",	FALSE,	controlG},
 	
 //	{"arkanoid",	FALSE,	arkanoid},
 	{"?",		FALSE,	xsh_help}

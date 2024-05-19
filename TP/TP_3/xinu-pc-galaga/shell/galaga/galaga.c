@@ -9,9 +9,8 @@
 /*
 Version Cristopher
 1_agregue cuando se detecta el disparo con el enemigo una bandera
-2_agregue a las estructuras easyEnemy y hardEnemy una variable entera para detecta si este choco con el player
-3_agregue una vairbale vidas(cuando llega a cero termina el juego)
-4_endgame() modificado para lo de vidas
+2_agregue una vairbale vidas(cuando llega a cero termina el juego)
+3_endgame() modificado para lo de vidas
 */
 extern pid32 pidVida;
 extern pid32 pidControl;
@@ -86,13 +85,13 @@ struct Enemy
 {
 	volatile u16 enemyX;
 	volatile u16 enemyY;
-	int collisionFlag; // Bandera para controlar la colisión con el jugador
+	int collisionFlag; // Bandera para controlar la colision con el jugador
 };
 struct FastEnemy
 {
 	volatile u16 fastX;
 	volatile u16 fastY;
-	int collisionFlag; // Bandera para controlar la colisión con el jugador
+	int collisionFlag; // Bandera para controlar la colision con el jugador
 };
 
 int shoots[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -199,23 +198,27 @@ int galaga(void) {
 				drawImage3((shoots[i] % 240), (shoots[i] / 240), 5, 5, shoot);
 				shoots[i] = shoots[i]-240*4;
 				if (shoots[i] <=0)   shoots[i]=0;
+
+
+
+				
 			}
 
-if (shoots[i] != 0)
+			if (shoots[i] != 0)
 			{
 				// para controlar si ya se envio el mensaje de colision se reinicia en cada bucle del galaga
-				int collisionDetected = 0;
+				int collDetectada = 0;
 
 				// Verifica si hay colision con un enemigo
 				for (int j = 0; j < 9; j++)
 				{
 					if (collision(easyEnemies[j].enemyX, easyEnemies[j].enemyY, 15, 15, shoots[i] % 240, shoots[i] / 240))
 					{
-						if (!collisionDetected)
+						if (!collDetectada)
 						{
 							// Si hay colision y no se ha enviado el mensaje, lo envaa
 							send(pidVida, 1);
-							collisionDetected = 1; // Marca que ya se envio el mensaje
+							collDetectada = 1; // Marca que ya se envio el mensaje
 						}
 
 						drawRect(easyEnemies[j].enemyX, easyEnemies[j].enemyY, 20, 20, BLACK);
@@ -234,7 +237,7 @@ if (shoots[i] != 0)
 			drawImage3(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, enemy);
 			if (collision(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, player.playerX, player.playerY)) {
 				drawRect(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, BLACK); // Elimina al enemigo de la pantalla
-                hardEnemies[a].enemyY = 0; // Restablece la posición del enemigo
+                hardEnemies[a].enemyY = 0; // Restablece la posicion del enemigo
 				endGame();
 			}	
 			if (hardEnemies[a].enemyY >= 228) {
@@ -256,6 +259,7 @@ if (shoots[i] != 0)
 		drawHollowRect(fast.fastX - 1, fast.fastY - 1, 17, 17, BLACK);
 		drawHollowRect(fast.fastX - 2, fast.fastY - 2, 19, 19, BLACK);
 		if( collision(fast.fastX, fast.fastY, 15, 15, player.playerX, player.playerY)) {
+
 			endGame();
 		}		
 //RAFA		fast.fastX += fastXSpeed;

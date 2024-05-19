@@ -1,0 +1,9 @@
+a.  ¿Qué significa el acrónimo gcc?. 
+
+        GNU Compiler Collection
+
+    ¿Desde cuándo está el proyecto?. 
+
+        
+
+    ¿Cuál es su objetivo?
