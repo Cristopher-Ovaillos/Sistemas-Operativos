@@ -2,6 +2,7 @@
     "files.associations": {
         "stdio.h": "c",
         "xinu.h": "c",
-        "mman.h": "c"
+        "mman.h": "c",
+        "wait.h": "c"
     }
 }
