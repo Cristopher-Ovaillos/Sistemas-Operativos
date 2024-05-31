@@ -20,7 +20,6 @@ int32 vidaypuntaje(void)
         case 0:
             vidas = 3;
             puntaje = 0;
-            
             break;
         case 1:
             puntaje++;
