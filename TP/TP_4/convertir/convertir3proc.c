@@ -67,7 +67,7 @@ void convertir(int in_fd, int out_fd, BMPHeader h, BMPInfoHeader infoh, int star
     /*
     Desplazarse en la matriz usando aritmetica de punteros:
     (nueva_imagen + i);
-    para acceder al byte en la posición i
+    para acceder al byte en la posicion i
     */
 }
 /*
