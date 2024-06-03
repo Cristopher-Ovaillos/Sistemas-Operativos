@@ -82,8 +82,10 @@ void *convertir(void *strucArg)
         }
         lseek(in_fd, padding, SEEK_CUR);
     }
-
-   
+    sem_wait(&sem);
+    lseek(out_fd, cabecera + (start * (width * 3 + padding)), SEEK_SET); // me dirijo a la direccion que se encarga este proceso X
+    write(out_fd, nueva_imagen + (start * (width * 3 + padding)), (end - start) * (width * 3 + padding));
+    sem_post(&sem); 
 }
 
 void something_wrong(int fd, const char *m)
@@ -168,7 +170,7 @@ int main()
     pthread_join(tid[2], NULL);
 
     sem_destroy(&sem); //PARA ELIMINAR EL SEMAFORO QUE SE CREOO
-    write(out_fd, &nueva_imagen[0], infoh.width * infoh.height * 3);
+    //write(out_fd, &nueva_imagen[0], infoh.width * infoh.height * 3);
 
     close(in_fd);
     close(out_fd);
