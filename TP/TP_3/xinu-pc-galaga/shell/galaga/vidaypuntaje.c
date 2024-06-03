@@ -1,5 +1,5 @@
 #include <xinu.h>
-int32 vidas;
+extern int32 vidas;
 int32 puntaje;
 int32 vidaypuntaje(void)
 {

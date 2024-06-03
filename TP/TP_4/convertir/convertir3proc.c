@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
+//LEER ANOTACIONES
 #define BMP_FILE "input.bmp"
 #define GRAYSCALE_FILE "output_grayscale.bmp"
 //man lseek
@@ -118,7 +118,7 @@ int main()
     write(out_fd, &h, sizeof(BMPHeader));
     write(out_fd, &infoh, sizeof(BMPInfoHeader));
     //valores de la imagen respecto al EJE Y
-    int seccion_altura = infoh.height / 3;//CANTIDAD DE PROCESOS
+    int seccion_altura = infoh.height / 3;//CANTIDAD DE PROCESOS EL VALOR 3
 
     int start0 = 0;
     int end0 = seccion_altura;

@@ -16,7 +16,7 @@ extern pid32 pidVida;
 extern pid32 pidControl;
 extern unsigned char tecla_actual;
 typedef unsigned short u16;
-int32 vidas;
+extern int32 vidas;
 #define RGB(r, g, b) (r | (g << 5) | (b << 10))
 // #define REG_DISPCNT *(u16 *)0x4000000
 #define extern videoBuffer
