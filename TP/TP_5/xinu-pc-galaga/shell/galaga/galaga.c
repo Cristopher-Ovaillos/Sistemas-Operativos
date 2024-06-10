@@ -5,9 +5,18 @@
 #include "boss.h"
 #include "gameover.h"
 #include "shoot.h"
-
+#include "xinu.h"
+/*
+Version Cristopher
+1_agregue cuando se detecta el disparo con el enemigo una bandera
+2_agregue una vairbale vidas(cuando llega a cero termina el juego)
+3_endgame() modificado para lo de vidas
+*/
+extern pid32 pidVida;
+extern pid32 pidControl;
 extern unsigned char tecla_actual;
 typedef unsigned short u16;
+extern int32 vidas;
 #define RGB(r, g, b) (r | (g << 5) | (b << 10))
 // #define REG_DISPCNT *(u16 *)0x4000000
 #define extern videoBuffer
@@ -29,7 +38,7 @@ typedef unsigned short u16;
 #define BUTTON_L		(1<<9)
 #define KEY_DOWN_NOW(key)  (~(BUTTONS) & key)
 */
-//#define BUTTONS *(volatile unsigned int *)0x4000130
+// #define BUTTONS *(volatile unsigned int *)0x4000130
 
 #define BUTTON_A	0x24
 #define BUTTON_B	0x25 
@@ -41,45 +50,54 @@ typedef unsigned short u16;
 #define BUTTON_DOWN 	's'	
 #define BUTTON_R	'1'
 #define BUTTON_L	'2'
+#define BUTTON_ESC		0x01 /*ESC*/
+
+
 #define KEY_DOWN_NOW(key)  (tecla_actual == key)
 
-//variable definitions
+
+// variable definitions
 #define playerspeed 2
 #define enemyspeed 1
 #define fastXSpeed 3
 #define fastYSpeed 2
 
-
 void setPixel(int x, int y, u16 color);
 void drawRect(int x, int y, int width, int height, u16 color);
 void drawHollowRect(int x, int y, int width, int height, u16 color);
-void drawImage3(int x, int y, int width, int height, const u16* image);
+void drawImage3(int x, int y, int width, int height, const u16 *image);
 void delay_galaga();
 void waitForVBlank();
 
-//helpers
+// helpers
 void initialize();
 void drawEnemies();
 void endGame();
 int collision(u16 enemyX, u16 enemyY, u16 enemyWidth, u16 enemyHeight, u16 playerX, u16 playerY);
 
-//objects
-struct Players {
+// objects
+struct Players
+{
 	volatile u16 playerX;
 	volatile u16 playerY;
 };
-struct Enemy {
+struct Enemy
+{
 	volatile u16 enemyX;
 	volatile u16 enemyY;
+	int collisionFlag; // Bandera para controlar la colision con el jugador
 };
-struct FastEnemy {
+struct FastEnemy
+{
 	volatile u16 fastX;
 	volatile u16 fastY;
+	int collisionFlag; // Bandera para controlar la colision con el jugador
 };
 
 int shoots[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int curr_shot = 0;
 #define N_SHOOTS 10
+
 
 int galaga(void) {
 	//easy enemy wave set setup
@@ -157,12 +175,16 @@ int galaga(void) {
 		drawImage3(player.playerX, player.playerY, 24, 24, playerImage);
 		drawHollowRect(player.playerX - 1, player.playerY - 1, 26, 26, BLACK);
 		drawHollowRect(player.playerX - 2, player.playerY - 2, 28, 28, BLACK);
+		
 		//draw easy enemies with downward movement
 		for (int a = 0; a < 9; a++) {
 			easyEnemies[a].enemyY += enemyspeed;
 			drawImage3(easyEnemies[a].enemyX, easyEnemies[a].enemyY, 20, 20, enemy);
 			if (collision(easyEnemies[a].enemyX, easyEnemies[a].enemyY, 20, 20, player.playerX, player.playerY)) {
+				drawRect(easyEnemies[a].enemyX, easyEnemies[a].enemyY, 20, 20, BLACK); // Elimina al enemigo de la pantalla
+                easyEnemies[a].enemyY = 0; // Restablece la posición del enemigo
 				endGame();
+				
 			}	
 			if (easyEnemies[a].enemyY >= 160) {
 				easyEnemies[a].enemyY = 0;
@@ -176,17 +198,37 @@ int galaga(void) {
 				drawImage3((shoots[i] % 240), (shoots[i] / 240), 5, 5, shoot);
 				shoots[i] = shoots[i]-240*4;
 				if (shoots[i] <=0)   shoots[i]=0;
+
+
+
+				
 			}
 
-			// check hits of shoots
-			for (int j = 0; j < 9; j++) {
-				if (collision(easyEnemies[j].enemyX, easyEnemies[j].enemyY, 15, 15, shoots[i] % 240, shoots[i] / 240)) {
-					drawRect(easyEnemies[j].enemyX, easyEnemies[j].enemyY,  20, 20, BLACK);
-					drawRect((shoots[i] % 240), (shoots[i] / 240)+4, 5, 5, BLACK);
-					easyEnemies[j].enemyY = 0;
-					shoots[i] = 0;
+			if (shoots[i] != 0)
+			{
+				// para controlar si ya se envio el mensaje de colision se reinicia en cada bucle del galaga
+				int collDetectada = 0;
+
+				// Verifica si hay colision con un enemigo
+				for (int j = 0; j < 9; j++)
+				{
+					if (collision(easyEnemies[j].enemyX, easyEnemies[j].enemyY, 15, 15, shoots[i] % 240, shoots[i] / 240))
+					{
+						if (!collDetectada)
+						{
+							// Si hay colision y no se ha enviado el mensaje, lo envaa
+							send(pidVida, 1);
+							collDetectada = 1; // Marca que ya se envio el mensaje
+						}
+
+						drawRect(easyEnemies[j].enemyX, easyEnemies[j].enemyY, 20, 20, BLACK);
+						drawRect((shoots[i] % 240), (shoots[i] / 240) + 4, 5, 5, BLACK);
+						easyEnemies[j].enemyY = 0;
+						shoots[i] = 0;
+					}
 				}
 			}
+			
 		}
 		
 		//draw hard enemies
@@ -194,6 +236,8 @@ int galaga(void) {
 			hardEnemies[a].enemyY += enemyspeed;
 			drawImage3(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, enemy);
 			if (collision(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, player.playerX, player.playerY)) {
+				drawRect(hardEnemies[a].enemyX, hardEnemies[a].enemyY, 20, 20, BLACK); // Elimina al enemigo de la pantalla
+                hardEnemies[a].enemyY = 0; // Restablece la posicion del enemigo
 				endGame();
 			}	
 			if (hardEnemies[a].enemyY >= 228) {
@@ -214,7 +258,8 @@ int galaga(void) {
 		drawImage3(fast.fastX, fast.fastY, 15, 15, boss);
 		drawHollowRect(fast.fastX - 1, fast.fastY - 1, 17, 17, BLACK);
 		drawHollowRect(fast.fastX - 2, fast.fastY - 2, 19, 19, BLACK);
-		if(collision(fast.fastX, fast.fastY, 15, 15, player.playerX, player.playerY)) {
+		if( collision(fast.fastX, fast.fastY, 15, 15, player.playerX, player.playerY)) {
+
 			endGame();
 		}		
 //RAFA		fast.fastX += fastXSpeed;
@@ -228,52 +273,56 @@ int galaga(void) {
 	}	
 	return 0;
 }
+	
 
-
-int collision(u16 enemyX, u16 enemyY, u16 enemyWidth, u16 enemyHeight, u16 playerX, u16 playerY) {
-	//check if bottom right corner of enemy is within player
-	if (((enemyX + enemyWidth) > playerX) && ( (enemyY + enemyHeight) 
-		> playerY ) &&  ((enemyX + enemyWidth) < (playerX + 24)) 
-		&& ((enemyY + enemyWidth) < (playerY + 24))) {
-		return 1;
-	} 
-	//check bottom left corner of enemy
-	if ( (enemyX < (playerX + 24)) 
-		&& (enemyX > playerX)
-		&& ((enemyY + enemyHeight) > playerY)
-		&& ((enemyY + enemyHeight) < (playerY + 24))
-		) {
+int collision(u16 enemyX, u16 enemyY, u16 enemyWidth, u16 enemyHeight, u16 playerX, u16 playerY)
+{
+	// check if bottom right corner of enemy is within player
+	if (((enemyX + enemyWidth) > playerX) && ((enemyY + enemyHeight) > playerY) && ((enemyX + enemyWidth) < (playerX + 24)) && ((enemyY + enemyWidth) < (playerY + 24)))
+	{
 		return 1;
 	}
-	//check top left corner
-	if ( (enemyX < (playerX + 24)) 
-		&& (enemyX > playerX)
-		&& (enemyY > playerY)
-		&& (enemyY < (playerY + 24))
-		) {
+	// check bottom left corner of enemy
+	if ((enemyX < (playerX + 24)) && (enemyX > playerX) && ((enemyY + enemyHeight) > playerY) && ((enemyY + enemyHeight) < (playerY + 24)))
+	{
 		return 1;
-	}	
-	//check top right corner
-	if ( ((enemyX + enemyWidth) < (playerX + 24)) 
-		&& ((enemyX + enemyWidth) > playerX)
-		&& (enemyY > playerY)
-		&& (enemyY < (playerY + 24))
-		) {
+	}
+	// check top left corner
+	if ((enemyX < (playerX + 24)) && (enemyX > playerX) && (enemyY > playerY) && (enemyY < (playerY + 24)))
+	{
 		return 1;
-	}	
+	}
+	// check top right corner
+	if (((enemyX + enemyWidth) < (playerX + 24)) && ((enemyX + enemyWidth) > playerX) && (enemyY > playerY) && (enemyY < (playerY + 24)))
+	{
+		return 1;
+	}
 	return 0;
 }
 
-void endGame() {
-	//start Game Over State
-	drawImage3(0, 0, 240, 160, gameover);
-	drawHollowRect(0, 0, 240, 160, WHITE);
-	while(1) {
-		if (KEY_DOWN_NOW(BUTTON_SELECT)) {
-			galaga();
-		}
-		if (KEY_DOWN_NOW(BUTTON_START))	{
-			galaga();
-		}
-	}
+void endGame()
+{
+	send(pidVida,-1);
+    // Mostrar pantalla de Game Over o detener el juego si vidas <= 0
+    if (vidas <= 0)
+    {
+        // Mostrar pantalla de Game Over
+        drawImage3(0, 0, 240, 160, gameover);
+        drawHollowRect(0, 0, 240, 160, WHITE);
+        while (1)
+        {
+            if (KEY_DOWN_NOW(BUTTON_SELECT) || KEY_DOWN_NOW(BUTTON_START))
+            {
+				send(pidVida,0);
+                galaga();
+
+            }
+            if (KEY_DOWN_NOW(BUTTON_ESC))
+            {
+                send(pidControl,-1);
+            }
+        }
+        // Detener el bucle principal u otras acciones necesarias para terminar el juego
+    }
 }
+

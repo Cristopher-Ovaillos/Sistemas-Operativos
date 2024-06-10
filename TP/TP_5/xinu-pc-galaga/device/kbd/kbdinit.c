@@ -1,10 +1,14 @@
 /* kbdinit.c  -  kbdinit */
 
+
 #include <xinu.h>
 #include <keyboard.h>
 
 unsigned char kblayout [128];  // { ... } Fill your layout yourself 
+struct StBuffer stbuffer;
 
+sid32 semKbd;
+pid32 pidKbd;
 
 void keyboard_wait(byte a_type) //unsigned char
 {
@@ -33,18 +37,21 @@ void keyboard_wait(byte a_type) //unsigned char
   }
 }
 
-
-
-
 /*------------------------------------------------------------------------
  *  kbdinit  -  Initialize the ps/2 keyboard
  *------------------------------------------------------------------------
  */
 devcall	kbdinit (
-	  struct dentry	*devptr		/* Entry in device switch table	*/
+	  struct dentry	*devptr		
 	)
 {
-
+	//modificacion para driver
+	semKbd = semcreate(1);
+	pidKbd = -1;//el -1 significa sin asignacion
+	stbuffer.semInBf = semcreate(0);
+	stbuffer.index = 0;
+	stbuffer.finIndex = 0;
+	//
 	int i;
 	for (i=0; i<128; i++)
 		kblayout[i] = i;
@@ -68,7 +75,7 @@ devcall	kbdinit (
 	outportb(0x60, _status);
  
 	//Tell the keyboard to use default settings
-	/* while((inportb(0x64)&2)!=0){};*/
+
 	// outportb(0x64, 0xF6);
 	//keyboard_read();  //Acknowledge
  
@@ -84,3 +91,4 @@ devcall	kbdinit (
 
 	return OK;
 }
+

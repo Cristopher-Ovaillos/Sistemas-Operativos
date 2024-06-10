@@ -5,7 +5,11 @@
 #include <xinu.h>
 #include <keyboard.h>
 
-unsigned char tecla_actual;
+//unsigned char tecla_actual;
+
+//agrego los pid externo inicializados en kbinit
+extern pid32 pidKbd;
+extern struct StBuffer stbuffer;
 
 unsigned char get_scancode()
 {
@@ -19,6 +23,7 @@ unsigned char get_scancode()
  *  kbdhandler  -  Handle an interrupt for the keyboard device
  *------------------------------------------------------------------------
  */
+
 void kbdhandler(void)
 {
 	char t[80];
@@ -27,9 +32,23 @@ void kbdhandler(void)
 	int i = 10;
 
 	scancode = get_scancode();
-	tecla_actual = scancode;
-	sprintf(t, "kbd: 0x%x     ", scancode);
-	print_text_on_vga(10, 300, t);
+	//tecla_actual = scancode;
+	//sprintf(t, "kbd: 0x%x     ", scancode);
+	//print_text_on_vga(10, 300, t);
+
+//agrego
+if((stbuffer.finIndex+1)%BUFFER_SIZE == stbuffer.index){
+        //SI ESTA LLENA
+    }else{
+        //SI TIENE ESPACIO
+		send(pidKbd,scancode);
+      
+    }
+
+
+
+
+
 
 	if(scancode == 0x2A) {
 		shift_key = 1;//Shift key is pressed
@@ -42,4 +61,5 @@ void kbdhandler(void)
 		}     
 	}
 }
+
 

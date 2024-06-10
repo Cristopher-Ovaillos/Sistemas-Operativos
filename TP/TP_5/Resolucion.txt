@@ -1,0 +1,89 @@
+
+RECORDATORIO 
+LOS EXTERN DE STBUFFER, SEMKBD, PIDKBD los inicializa en kbdinit
+
+1.
+AGREGAR EN include/keyboard.h EL BUFFER
+2.
+Agregar en device/ el archivo getc
+3.
+en kbdread.c realizar el getc 
+osea elq eu hace un read con el getc guardo el pid de este.
+4. 
+control desde open y close
+5.
+implemento putc.c 
+6.
+En config/configuration
+configurando las funciones que manejarán las diversas operaciones 
+del dispositivo del teclado, como la inicialización, apertura, 
+cierre, lectura, etc.
+
+kbd:
+	on nothing
+		-i kbdinit	-o kbdopen	-c kbdclose
+		-r kbdread	-g ioerr	-p ioerr
+		-w kbdwrite	-s ioerr	-n ioerr
+		-intr kbdhandlerirq
+
+--PASA A ESTO--
+kbd:
+	on nothing
+		-i kbdinit	-o kbdopen	-c kbdclose
+		-r kbdread	-g kbdgetc	-p ioerr
+		-w kbdwrite	-s ioerr	-n ioerr
+		-intr kbdhandlerirq
+
+Se hace que las funciones kbdgetc se utilicen para 
+las operaciones correspondientes, en lugar de las funciones de 
+error genericas (ioerr).
+
+
+QUE HACEN?
+
+KBDINIT:
+*se encarga de inicializar el teclado PS/2 y el driver asociado.
+*Asigna la dirección de la rutina de atención de interrupciones (kbdhandler()) al vector de interrupciones correspondiente
+*Configura el controlador de teclado para aceptar interrupciones y establecer las configuraciones necesarias.
+
+kbdhandler:
+*es la rutina de atención de interrupciones del teclado. 
+*Lee el código de escaneo del teclado.
+*Añade el código de escaneo al buffer si hay espacio disponible.
+*Señala que hay datos disponibles en el buffer mediante un semáforo (stbuffer.semInBf).
+
+KBDopen:
+*Abre el dispositivo de teclado para su uso por un proceso. 
+*Espera el semáforo (semKbd) para asegurarse de que solo un proceso puede acceder al teclado.
+*Registra el PID del proceso que ha abierto el teclado (pidKbd).
+
+KBDCLOSE:
+*cierra el dispositivo de teclado.
+*Verifica si el proceso que llama a kbdclose() es el mismo que abrió el teclado.
+*Si es así, libera el semáforo (semKbd) y restablece pidKbd a -1, indicando que el teclado no está asignado a ningún proceso.
+
+KBDGETC:
+*obtiene un código de tecla del buffer
+*Verifica que el proceso que llama a kbdgetc() es el que abrió el teclado.
+*Espera a que haya datos disponibles en el buffer (stbuffer.semInBf).
+*Lee el código de tecla del buffer y ajusta el índice del buffer.
+
+KBDREAD:
+*lee el estado del teclado.
+*Verifica que el proceso que llama a kbdread() es el que abrió el teclado.
+*Llama a kbdgetc() para obtener un código de tecla y lo coloca en el buffer proporcionado por el usuario.
+*Devuelve la cantidad de bytes leídos (en este caso, siempre 1 si tiene éxito).
+
+KBDPUTC:
+*añade un carácter al buffer del teclado. Aunque esta función no es estrictamente necesaria para la operación del driver del teclado
+*Verifica que el proceso que llama a kbdputc() es el que abrió el teclado.
+*Añade el carácter al buffer si hay espacio disponible y ajusta el índice del buffer.
+*Señala que hay datos disponibles en el buffer (stbuffer.semInBf).
+
+
+KEYBOARD.H:
+Este archivo es el encabezado que define las constantes y estructuras utilizadas por el driver del teclado. Incluye:
+
+Definiciones de puertos de E/S para el teclado.
+Tamaño del buffer del teclado (BUFFER_SIZE).
+Declaraciones de variables y estructuras globales (kblayout, StBuffer).

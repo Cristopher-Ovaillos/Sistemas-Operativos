@@ -74,6 +74,7 @@ extern	shellcmd  xsh_udpeserver (int32, char *[]);
 extern	shellcmd  xsh_uptime	(int32, char *[]);
 extern	shellcmd  galaga	(int32, char *[]);
 //extern	shellcmd  arkanoid	(int32, char *[]);
-
+extern	shellcmd  controlG	(int32, char *[]);
+extern	shellcmd  vidaypuntaje	(int32, char *[]);
 /* in file xsh_help.c */
 extern	shellcmd  xsh_help	(int32, char *[]);

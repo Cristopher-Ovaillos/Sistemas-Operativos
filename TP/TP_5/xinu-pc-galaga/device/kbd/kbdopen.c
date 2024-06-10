@@ -1,16 +1,16 @@
 /* kbdopen.c  -  kbdopen */
 
 #include <xinu.h>
-
-/*------------------------------------------------------------------------
- * kbdopen  -  Open the ps/2 keyboard device
- *------------------------------------------------------------------------
- */
-
+#include <keyboard.h>
+	extern sid32 semKbd;
+	extern pid32 pidKbd;
 devcall	kbdopen (
-	 struct	dentry	*devptr,	/* Entry in device switch table	*/
-	 char	*name,			/* Unused for a kbd */
-	 char	*mode			/* Unused for a kbd */
+	 struct	dentry	*devptr,	
+	 char	*name,		
+	 char	*mode			
 	)
 {
+	//aca implemento la ospera
+	wait(semKbd);
+	pidKbd = getpid();
 }
