@@ -4,10 +4,13 @@
 
 #include <xinu.h>
 #include <keyboard.h>
-
+/*
+maneja las interrupciones generadas por el teclado y procesa los 
+codigos de escaneo (scancodes) para almacenarlos en el buffer. */
 extern struct StBuffer stbuffer;
 
 //unsigned char tecla_actual;
+
 
 unsigned char get_scancode()
 {
@@ -29,16 +32,16 @@ void kbdhandler(void)
 	int i = 10;
 
 	scancode = get_scancode();
-	if((stbuffer.finIndex+1)%BUFFER_SIZE == stbuffer.index){
-        //SI ESTA LLENA
-    }else{
+
+	if((stbuffer.finIndex+1)%BUFFER_SIZE != stbuffer.index){
         //SI TIENE ESPACIO
         stbuffer.buffer[stbuffer.finIndex] = scancode;
         stbuffer.finIndex = (stbuffer.finIndex+1)%BUFFER_SIZE;
-        signal(stbuffer.semInBf);
+        	// Senialar que la operacion en el buffer ha terminado
+    signal(stbuffer.semInBf);
     }
 	//tecla_actual = scancode;
-	
+
 
 	if(scancode == 0x2A) {
 		shift_key = 1;//Shift key is pressed

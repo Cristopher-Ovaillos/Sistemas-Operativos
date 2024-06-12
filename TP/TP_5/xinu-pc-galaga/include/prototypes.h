@@ -624,8 +624,8 @@ extern devcall kbdopen ( struct       dentry  *devptr, char   *name, char     *m
 extern devcall kbdread ( struct dentry        *devptr, char          *buffer, uint32        count  );
 extern devcall kbdwrite ( struct dentry       *devptr, char *buffer, uint32        count);
 extern	interrupt	kbdhandlerirq(void);
-//agregue getc y putc
-extern devcall kbdputc(char);
+//agregue getc 
+
 extern unsigned char kbdgetc();
 /* in file wait.c */
 extern	syscall	wait(sid32);

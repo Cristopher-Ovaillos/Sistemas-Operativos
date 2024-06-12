@@ -10,7 +10,7 @@ devcall	kbdopen (
 	 char	*mode			
 	)
 {
-	//aca implemento la ospera
-	wait(semKbd);
-	pidKbd = getpid();
+
+	wait(semKbd); //semaforo de teclado
+	pidKbd = getpid();//actualizo
 }

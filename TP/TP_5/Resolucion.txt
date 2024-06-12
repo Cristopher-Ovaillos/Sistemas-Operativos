@@ -12,7 +12,7 @@ osea elq eu hace un read con el getc guardo el pid de este.
 4. 
 control desde open y close
 5.
-implemento putc.c 
+----nada xd
 6.
 En config/configuration
 configurando las funciones que manejarán las diversas operaciones 
@@ -38,7 +38,14 @@ Se hace que las funciones kbdgetc se utilicen para
 las operaciones correspondientes, en lugar de las funciones de 
 error genericas (ioerr).
 7. agregue en prototypes.H
-los metodos kbdgetc y kbdputc
+los metodos kbdgetc 
+8_
+stbuffer.semInBf juega un papel crucial en la sincronización de acceso al buffer del teclado entre el manejador de interrupciones (interrupt handler) y las funciones que leen del buffer (como kbdgetc)
+El semáforo stbuffer.semInBf se utiliza para sincronizar el acceso al buffer de teclado, asegurando que las operaciones de escritura y lectura se realicen de manera segura y en el orden correcto.
+Inicialización a 0: La inicialización a 0 (es decir, semcreate(0)) asegura que la función de lectura (kbdgetc) espere hasta que el manejador de interrupciones haya escrito un nuevo scancode en el buffer.
+
+
+----------------
 
 QUE HACEN?
 

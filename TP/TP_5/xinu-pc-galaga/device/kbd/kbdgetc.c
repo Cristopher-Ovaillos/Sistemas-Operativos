@@ -2,27 +2,24 @@
 #include <xinu.h>
 #include <keyboard.h>
 
+/*
+se encarga de leer un byte del buffer del teclado de manera
+sincronizada, asegurando que solo el proceso con pidKbd pueda realizar
+esta operacion.
+*/
 extern struct StBuffer stbuffer;
 extern pid32 pidKbd;
 
-unsigned char kbdgetc()
-{
-
- 
-   
-    if (pidKbd == getpid())
-    {
-         unsigned char c = SYSERR;
-        wait(stbuffer.semInBf);
-        // wait(stbuffer.semBin);
-        c = stbuffer.buffer[stbuffer.index];
-        stbuffer.buffer[stbuffer.index] = 0;
-        stbuffer.index = (stbuffer.index + 1) % BUFFER_SIZE;
-        // signal(stbuffer.semBin);
-        return c;
-    }else{
-        //system error
-        return SYSERR;
-    } 
+unsigned char kbdgetc(){
+    unsigned char c = SYSERR;
+    if(pidKbd = getpid()){
+    wait(stbuffer.semInBf);
+    
+    c = stbuffer.buffer[stbuffer.index];
+    stbuffer.buffer[stbuffer.index] = 0;
+    stbuffer.index = (stbuffer.index+1)%BUFFER_SIZE;
+  
+    }
+    return c;
     
 }

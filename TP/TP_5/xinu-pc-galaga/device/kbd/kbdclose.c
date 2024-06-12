@@ -8,7 +8,7 @@
  *------------------------------------------------------------------------
  */
 
-//estos es estan definidos desde keyboard
+//estos es estan definidos desde keyboard e inicializados en KBDINIT
 extern sid32 semKbd;
 extern pid32 pidKbd;
 
@@ -17,7 +17,9 @@ devcall	kbdclose (
 	)
 {
 		if (pidKbd == getpid())
-	{
+	{	
+		//bueno el kbdclose si el proceso tiene al teclado entonces libera el permiso para que otro proceso lo pueda ocupar
+		//por solo un proceso puede usar teclado no dos 
 		signal(semKbd);
 	}
 }
