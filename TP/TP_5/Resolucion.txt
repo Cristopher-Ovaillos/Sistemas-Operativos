@@ -1,7 +1,7 @@
 
 RECORDATORIO 
-LOS EXTERN DE STBUFFER, SEMKBD, PIDKBD los inicializa en kbdinit
-
+*LOS EXTERN DE STBUFFER, SEMKBD, PIDKBD los inicializa en kbdinit
+*para sacar el 0x BOTON cuando se inicia el qemu (pantalla amarilla) ir a kbdhandler original
 1.
 AGREGAR EN include/keyboard.h EL BUFFER
 2.
@@ -88,3 +88,13 @@ Este archivo es el encabezado que define las constantes y estructuras utilizadas
 Definiciones de puertos de E/S para el teclado.
 Tamaño del buffer del teclado (BUFFER_SIZE).
 Declaraciones de variables y estructuras globales (kblayout, StBuffer).
+-----------------
+kbdhandler: Maneja las interrupciones del teclado. Este se ejecuta cada vez que se presiona o se libera una tecla.
+kbdgetc: Recupera el carácter del buffer del teclado.
+kbdread: Lee la entrada del teclado desde el dispositivo.
+procTeclado: Función que monitorea las teclas presionadas y liberadas y actualiza el estado del juego.
+
+-----	G A L A G A		-----
+1.
+ Ahora el tecla actual de galaga.c como no esta definido en kbdhandler 
+entonces necesitamos un proceso que inicialice ese variable con el teclado como lo hacia kbdhandler

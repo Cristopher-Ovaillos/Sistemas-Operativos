@@ -1,31 +1,28 @@
-//se encarga de ver el teclado el byte
+// se encarga de ver el teclado el byte
 #include <xinu.h>
 #include <keyboard.h>
 
 extern struct StBuffer stbuffer;
 extern pid32 pidKbd;
 
-unsigned char kbdgetc(){
-    
-    /*
-     SYSERR ESTA DEFINIO EN INCLUDE/KERNEL.H
-    inicializa la variable c con un valor de error 
-    (SYSERR). Esta inicialización garantiza que si
-     por alguna razón el proceso actual no 
-     tiene acceso al teclado 
-     (es decir, pidKbd != getpid()), la función 
-     kbdgetc() devolverá un valor indicativo de 
-     error. Es una practica de programación 
-     defensiva que ayuda a evitar comportamientos 
-     indefinidos o errores sutiles en el codigo.
-    */
-    unsigned char c = SYSERR;
-    if(pidKbd == getpid()){
-    c = receive();
-    }
-    return c;
-    
+unsigned char kbdgetc()
+{
+
+ 
    
+    if (pidKbd == getpid())
+    {
+         unsigned char c = SYSERR;
+        wait(stbuffer.semInBf);
+        // wait(stbuffer.semBin);
+        c = stbuffer.buffer[stbuffer.index];
+        stbuffer.buffer[stbuffer.index] = 0;
+        stbuffer.index = (stbuffer.index + 1) % BUFFER_SIZE;
+        // signal(stbuffer.semBin);
+        return c;
+    }else{
+        //system error
+        return SYSERR;
+    } 
     
 }
-

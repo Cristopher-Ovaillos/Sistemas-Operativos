@@ -76,5 +76,7 @@ extern	shellcmd  galaga	(int32, char *[]);
 //extern	shellcmd  arkanoid	(int32, char *[]);
 extern	shellcmd  controlG	(int32, char *[]);
 extern	shellcmd  vidaypuntaje	(int32, char *[]);
+//agregue 
+extern shellcmd procTeclado	(int32, char *[]);
 /* in file xsh_help.c */
 extern	shellcmd  xsh_help	(int32, char *[]);

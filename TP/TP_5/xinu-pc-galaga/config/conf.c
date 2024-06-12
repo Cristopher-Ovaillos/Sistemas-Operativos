@@ -46,6 +46,7 @@ struct	dentry	devtab[NDEVS] =
 	  (void *)kbdread, (void *)kbdwrite, (void *)ioerr,
 	  (void *)kbdgetc, (void *)ioerr, (void *)ioerr,
 	  (void *)0x0, (void *)kbdhandlerirq, 0 },
+
 /* NULLDEV is null */
 	{ 4, 0, "NULLDEV",
 	  (void *)ionull, (void *)ionull, (void *)ionull,

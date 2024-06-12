@@ -3,9 +3,8 @@
 extern struct StBuffer stbuffer;
 extern pid32 pidKbd;
 devcall kbdputc(char c){
-    //el pid actual igual al que llamo
-    if(pidKbd == getpid()){
-
+    if(pidKbd = getpid()){
+    //wait(stbuffer.semBin);
     if((stbuffer.finIndex+1)%BUFFER_SIZE == stbuffer.index){
         //SI ESTA LLENA
     }else{
@@ -14,7 +13,7 @@ devcall kbdputc(char c){
         stbuffer.finIndex = (stbuffer.finIndex+1)%BUFFER_SIZE;
         signal(stbuffer.semInBf);
     }
-  
+   
     }
    
 }

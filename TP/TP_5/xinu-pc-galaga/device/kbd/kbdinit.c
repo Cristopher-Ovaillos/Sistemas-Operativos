@@ -5,9 +5,11 @@
 #include <keyboard.h>
 
 unsigned char kblayout [128];  // { ... } Fill your layout yourself 
+//defino las variables del keyboard.h
 struct StBuffer stbuffer;
-
+//asegurar que las operaciones de escritura y lectura en el buffer del teclado se realicen de manera segura y ordenada, evitando condiciones de carrera
 sid32 semKbd;
+// asegurar que solo el proceso correcto (es decir, el que se supone que maneja la entrada del teclado) pueda leer desde el buffer del teclado
 pid32 pidKbd;
 
 void keyboard_wait(byte a_type) //unsigned char
@@ -45,7 +47,6 @@ devcall	kbdinit (
 	  struct dentry	*devptr		
 	)
 {
-	//modificacion para driver
 	semKbd = semcreate(1);
 	pidKbd = -1;//el -1 significa sin asignacion
 	stbuffer.semInBf = semcreate(0);

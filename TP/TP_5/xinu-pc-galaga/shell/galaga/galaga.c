@@ -15,6 +15,7 @@ Version Cristopher
 extern pid32 pidVida;
 extern pid32 pidControl;
 extern unsigned char tecla_actual;
+extern unsigned char teclas[3];
 typedef unsigned short u16;
 extern int32 vidas;
 #define RGB(r, g, b) (r | (g << 5) | (b << 10))
@@ -40,8 +41,8 @@ extern int32 vidas;
 */
 // #define BUTTONS *(volatile unsigned int *)0x4000130
 
-#define BUTTON_A	0x24
-#define BUTTON_B	0x25 
+#define BUTTON_A	0x24 //LA J
+#define BUTTON_B	0x25 //LA K 
 #define BUTTON_SELECT	0x03
 #define BUTTON_START	0x2c
 #define BUTTON_RIGHT	0x1f
@@ -148,20 +149,23 @@ int galaga(void) {
 			galaga();
 		}
 		//player shots 
-		if (KEY_DOWN_NOW(BUTTON_A)) {
+		if (teclas[0]==1) {
 			if (shoots[curr_shot] == 0) {
 				shoots[curr_shot] = 136*240 + player.playerX+9; /* 24 widht player */
 				curr_shot++;
 				if (curr_shot >= N_SHOOTS)
 					curr_shot = 0;
 			};
+			
 		}
 		//player movement input
-		if (KEY_DOWN_NOW(BUTTON_LEFT) && (player.playerX > 0)) {
+		if (teclas[1]==1 && (player.playerX > 0)) {
 			player.playerX -= playerspeed;
+			
 		}
-		if (KEY_DOWN_NOW(BUTTON_RIGHT) && (player.playerX <= 216)) {
+		if (teclas[2]==1 && (player.playerX <= 216)) {
 			player.playerX += playerspeed;
+			
 		}
 		if (KEY_DOWN_NOW(BUTTON_UP) && (player.playerY > 25)) {
 			player.playerY -= playerspeed;
@@ -170,7 +174,8 @@ int galaga(void) {
 			player.playerY += playerspeed;
 		}
 		waitForVBlank();
-		sleepms(50);
+		//sleepms(50); para volver mas rapido xd
+		sleepms(20);
 		//draw player
 		drawImage3(player.playerX, player.playerY, 24, 24, playerImage);
 		drawHollowRect(player.playerX - 1, player.playerY - 1, 26, 26, BLACK);
@@ -198,10 +203,6 @@ int galaga(void) {
 				drawImage3((shoots[i] % 240), (shoots[i] / 240), 5, 5, shoot);
 				shoots[i] = shoots[i]-240*4;
 				if (shoots[i] <=0)   shoots[i]=0;
-
-
-
-				
 			}
 
 			if (shoots[i] != 0)
