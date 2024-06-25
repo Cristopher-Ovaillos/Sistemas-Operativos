@@ -12,7 +12,7 @@ extern pid32 pidKbd;
 
 unsigned char kbdgetc(){
     unsigned char c = SYSERR;
-    if(pidKbd = getpid()){
+    if(pidKbd == getpid()){
     wait(stbuffer.semInBf);
     
     c = stbuffer.buffer[stbuffer.index];

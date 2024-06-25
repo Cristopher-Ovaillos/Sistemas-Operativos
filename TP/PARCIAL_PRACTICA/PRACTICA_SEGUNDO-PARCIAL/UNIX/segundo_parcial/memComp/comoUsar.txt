@@ -1,0 +1,7 @@
+gcc -o invertir invertir.c -lrt
+gcc -o memoriaComp memoriaComp.c -lrt
+./invertir
+./memoriaComp
+
+y ya esta
+el invertir seria como A y memoriaComp como B

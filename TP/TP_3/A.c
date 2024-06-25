@@ -40,7 +40,7 @@ int main()
     _"O_RDWR" Indica que el objeto se abrirá para lectura y escritura."
     _"0666" Es el modo o permisos que se aplicarán al objeto de memoria compartida, en 
     este caso, permite lectura y escritura para todos los usuarios.
-
+    shm_open,ftruncate,mmap
     */
    ftruncate(shm_fd, SIZE);
     /* ahora asigna el segmento de memoria compartida en el

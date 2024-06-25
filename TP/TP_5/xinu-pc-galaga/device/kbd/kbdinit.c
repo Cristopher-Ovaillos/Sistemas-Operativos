@@ -36,7 +36,7 @@ devcall kbdinit(struct dentry *devptr)
 {
     semKbd = semcreate(1);
     pidKbd = -1; // sin asignacion
-    stbuffer.semInBf = semcreate(0); // Inicialmente a 0 para que permita la primera operación
+    stbuffer.semInBf = semcreate(0); // Inicialmente a 0 para que permita la primera operacion,se encarga el kbdhandler de liberar permisos
     stbuffer.index = 0;
     stbuffer.finIndex = 0;
 

@@ -1,0 +1,77 @@
+
+Vamos a abordar cada una de las preguntas planteadas:
+
+a. Defensa o crítica de la siguiente frase:
+"Una rutina de atención de interrupciones puede bloquear, por ejemplo, al tener que accionar algún hardware y esperando a que responda."
+
+Defensa:
+Esta afirmación es válida y se justifica porque las rutinas de atención a interrupciones (ISR, por sus siglas en inglés) 
+son funciones críticas que manejan eventos de hardware asincrónicos. Si una ISR necesita interactuar con un dispositivo 
+hardware (por ejemplo, enviar o recibir datos), puede bloquearse temporalmente mientras espera la respuesta del hardware. Durante 
+este tiempo, el procesador puede estar ocupado esperando y no ejecutar otras tareas, lo que puede considerarse como un bloqueo de 
+la ISR. Es crucial gestionar eficientemente estos bloqueos para evitar problemas como la pérdida de eventos o la degradación del 
+rendimiento del sistema.
+
+Crítica:
+La crítica podría centrarse en la afirmación de que una ISR está diseñada típicamente para ser rápida y eficiente, minimizando 
+el tiempo de bloqueo. En sistemas críticos y de tiempo real, es esencial diseñar las ISR de manera que cualquier operación que 
+pueda bloquear se maneje de manera adecuada para no comprometer la capacidad de respuesta del sistema.
+
+b. ¿El programa convertir_a_gris.c original visto en la práctica, podría ser portado sin mucho esfuerzo a MAC OS? ¿O a FreeBSD? Justifique su respuesta.
+Respuesta:
+No, el programa convertir_a_gris.c originalmente diseñado para ejecutarse en Linux no se podría portar fácilmente a macOS o FreeBSD 
+sin modificaciones significativas. Esto se debe a que el programa hace uso de llamadas de sistema específicas de Linux y puede depender 
+de características específicas del kernel y bibliotecas de Linux que no están presentes o son diferentes en macOS o FreeBSD.
+
+macOS: Tiene un kernel y una estructura de sistema de archivos diferentes a Linux, además de utilizar una variante de BSD. Las 
+lamadas de sistema y las bibliotecas son diferentes, por lo que el código necesitaría ser adaptado para funcionar correctamente en macOS.
+
+FreeBSD: Aunque es una variante de BSD, también tiene diferencias en las llamadas de sistema y en 
+la implementación de algunas funciones y bibliotecas en comparación con Linux. Por lo tanto, el código también requeriría ajustes para ser compatible con FreeBSD.
+
+c. Defensa o crítica de la siguiente afirmación:
+"En XINU los procesos no pueden utilizar el mecanismo de comunicación inter procesos 'memoria compartida', porque el sistema operativo no provee tal funcionalidad."
+
+Defensa:
+Esta afirmación es válida y se justifica en el contexto de XINU, un sistema operativo educativo y de investigación que 
+puede no incluir soporte nativo para mecanismos avanzados de IPC (Inter-Process Communication) como la memoria compartida. XINU 
+odría estar diseñado para ser más simple y centrarse en enseñar los fundamentos básicos de la programación de sistemas operativos 
+sin implementar características más complejas como la memoria compartida.
+
+Crítica:
+Podría argumentarse que, aunque XINU no ofrezca soporte integrado para la memoria compartida, es posible implementar este mecanismo como 
+parte de una extensión o modificación del sistema operativo. La ausencia de memoria compartida en el diseño base de XINU no necesariamente 
+impide su implementación como una característica adicional por parte de los desarrolladores o investigadores que trabajan con él.
+
+d. Defensa o crítica de la siguiente afirmación:
+"En un driver de dispositivo de E/S utilizar un buffer (como el implementado en la práctica) no tiene mucho sentido en realidad, 
+ya que un proceso puede inmediatamente consumir una entrada (o generar una salida) cuando el driver obtiene un dato de entrada vía 
+una interrupción (o emitió un dato de salida)."
+
+Crítica:
+Esta afirmación puede ser criticada porque los buffers en los drivers de E/S son esenciales para la gestión eficiente de datos. Los buffers 
+permiten que los datos se almacenen temporalmente mientras esperan ser procesados por el procesador o el proceso de usuario. Sin un buffer, un 
+driver de E/S tendría que esperar activamente a que el proceso de usuario esté listo para recibir datos, lo cual no es eficiente ni práctico en 
+términos de rendimiento y uso del CPU. Además, los buffers ayudan a manejar rápidas ráfagas de datos y a suavizar las diferencias en las 
+velocidades de procesamiento entre el dispositivo de E/S y el procesador.
+
+e. Consideración sobre el uso de POSIX por los desarrolladores de Android:
+Respuesta:
+Sí, es muy probable que los desarrolladores de Android hayan tenido en cuenta POSIX durante el desarrollo del sistema operativo. POSIX 
+(Portable Operating System Interface for Unix) define estándares para la interoperabilidad entre sistemas operativos tipo Unix, incluyendo 
+interfaces de programación de aplicaciones (API) y servicios de sistema. Android, basado en el núcleo de Linux, adopta muchas de las 
+características y APIs de POSIX, lo que facilita la portabilidad de aplicaciones entre diferentes sistemas Unix-like.
+
+Razones para considerar POSIX:
+
+Compatibilidad: Adoptar POSIX facilita que las aplicaciones escritas para otros sistemas Unix puedan ser portadas a Android con menos esfuerzo.
+Desarrollo de Aplicaciones: Utilizar estándares POSIX permite a los desarrolladores aprovechar su experiencia previa en sistemas Unix y aplicarla en 
+el desarrollo de aplicaciones para Android.
+Estabilidad y Consistencia: Al adherirse a estándares reconocidos como POSIX, Android puede ofrecer una interfaz de desarrollo estable 
+y consistente para los desarrolladores de aplicaciones.
+Consideración de Google (como entidad generadora de ingresos): Aunque Google busca generar ingresos a través de Android, la adopción de
+estándares como POSIX puede beneficiar al ecosistema Android al fomentar una mayor compatibilidad y facilitar la portabilidad de aplicaciones, lo 
+que a su vez podría aumentar la adopción y la base de usuarios de Android.
+
+En resumen, la consideración de POSIX por parte de los desarrolladores de Android es probable debido a sus beneficios en términos de 
+compatibilidad, desarrollo de aplicaciones y estabilidad del sistema operativo.
