@@ -1,4 +1,13 @@
 /* Ejemplo con threads en Linux. Compilar con: gcc -o threads convertir3Thread.c -lpthread -lrt */
+
+/*CRIS-2025 - CORREGIR, NO SE USA SEMAFOROS FUE MI ERROR USARLO ACA NO ERA NECESARIO
+Por esta razon:
+En este código se utilizan semáforos para proteger la escritura sobre el arreglo global nueva_imagen y la escritura en el archivo de salida. Sin embargo, dado 
+que cada hilo procesa una sección diferente de la imagen (sin solapamientos) y cada hilo abre sus propios(importante) descriptores de archivo (por lo tanto, tienen posiciones 
+independientes al usar lseek), no existe realmente una condición de carrera en la escritura de datos.
+
+
+*/
 /* Ejecutar con ./threads */
 #include <stdio.h>
 #include <stdlib.h>
