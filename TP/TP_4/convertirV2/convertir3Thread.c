@@ -6,7 +6,13 @@ En este código se utilizan semáforos para proteger la escritura sobre el arreg
 que cada hilo procesa una sección diferente de la imagen (sin solapamientos) y cada hilo abre sus propios(importante) descriptores de archivo (por lo tanto, tienen posiciones 
 independientes al usar lseek), no existe realmente una condición de carrera en la escritura de datos.
 
+ademas, aca lo use el semaforo para que bueno mi programa principal esperara a que terminaran estos hilos.
+pero existe join. El pthread_join se utiliza para esperar a que un hilo específico termine su ejecución.
 
+
+version mejorada: https://github.com/guillermo-diaz/sistemas-operativos/blob/master/TP4/ex03fixed.c
+en esta version en vez de cada hilo escribiera lo que hicimos fue hacer un arreglo de toda la imagen (asignando incio y fin para cada hilo), Y LUEGO este programa no los hilos
+es el encargado de escribirlo y crear una salida.
 */
 /* Ejecutar con ./threads */
 #include <stdio.h>
