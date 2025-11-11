@@ -1,7 +1,7 @@
 # DRIVER-xinu-pc-galaga
 
 Driver de teclado para Xinu OS con control de acceso exclusivo mediante semáforos y buffer circular.
-
+El galaga modificado es el de la carpeta:  DRIVER-xinu-pc-galaga
 ## Estructura de Archivos
 
 ```
